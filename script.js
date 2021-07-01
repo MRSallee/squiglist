@@ -85,7 +85,7 @@ function clickedStore(store) {
 // Load phones from JSON
 function loadJson(sortMethod, sortChange) {
     // https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API/Using_Fetch
-    let jsonFilename = 'data.json',
+    let jsonFilename = 'data.json?' + new Date().getTime(),
         jsonUrl = 'https://gsx2json.com/api?id=19ZKaK62HjH_gm7oMahN74hiR5nMqS1ifSrHloRIKfcg&sheet=2&columns=false';
     
     function handleData(data) {
