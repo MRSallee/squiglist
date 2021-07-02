@@ -387,6 +387,7 @@ function applyFiltersToDom(objFilter, filterType, filterValue, oldState) {
         model.setAttribute('state', 'visible');
     });
     
+    // Operate on each filter
     arrAllFilters.forEach(function(eachFilterSet) {
         let filterType = eachFilterSet.filterType,
             subFilters = eachFilterSet.filters;
@@ -411,26 +412,16 @@ function applyFiltersToDom(objFilter, filterType, filterValue, oldState) {
         });
     });
     
-    // Set empty states
-    let body = document.querySelector('body'),
-        sections = document.querySelectorAll('section.price-zone, section.favorites');
-    sections.forEach(function(section) {
-        let visibleArticles = section.querySelectorAll('article.product-model[state="visible"]').length;
-        
-        if (visibleArticles) {
-            section.removeAttribute('empty');
-        } else {
-            section.setAttribute('empty', 'true');
-        }
-    });
+    let disabledFilters = document.querySelectorAll('button.filter-button[state="hidden"]').length,
+        body = document.querySelector('body');
     
-    let contentfulSections = document.querySelectorAll('section.price-zone:not([empty="true"]), section.favorites:not([empty="true"])').length;
-    
-    if (contentfulSections) {
-        body.removeAttribute('empty');
+    if (disabledFilters) {
+        body.setAttribute('filters-active', 'true');
     } else {
-        body.setAttribute('empty', 'true');
+        body.removeAttribute('filters-active');
     }
+    
+    setEmptyState();
 }
 
 
@@ -467,3 +458,100 @@ altHeaderElem.addEventListener("click", function() {
         altHeaderElem.setAttribute("data-links", "expanded");
     }
 });
+
+
+
+// Share URL function
+
+// Search function
+
+function searchInit() {
+    let body = document.querySelector('body'),
+        searchInput = document.querySelector('input.search'),
+        filtersSection = document.querySelector('section.filters-button');
+    
+    // Handle search focus / defocus
+    searchInput.addEventListener('focus', function() {
+        searchInput.select();
+        
+        filtersSection.setAttribute('search-focus', 'true');
+    });
+        
+    searchInput.addEventListener('blur', function() {
+        let textLength = searchInput.value.length;
+        
+        filtersSection.setAttribute('search-focus', 'false');
+        
+        if (textLength) {
+            filtersSection.setAttribute('search-content', 'true');
+        } else {
+            let allArticles = document.querySelectorAll('article.product-model');
+            
+            filtersSection.setAttribute('search-content', 'false');
+            body.setAttribute('search-active', 'false');
+            
+            allArticles.forEach(function(article) {
+                article.removeAttribute('search');
+            });
+        }
+    });
+        
+    searchInput.addEventListener('keyup', function(e) {
+        if (e.keyCode === 13 || e.keyCode === 27) {
+            searchInput.blur();
+        }
+    });
+    
+    // Process search input
+    searchInput.addEventListener('input', function(e) {
+        let searchText = searchInput.value.toLowerCase(),
+            allArticles = document.querySelectorAll('article.product-model'),
+            allPriceZones = document.querySelectorAll('section.price-zone');
+        
+        if (searchText) {
+            body.setAttribute('search-active', 'true');
+        } else {
+            body.setAttribute('search-active', 'false');
+        }
+        
+        allArticles.forEach(function(article) {
+            let phoneName = article.querySelector('h2.model-name').textContent.toLowerCase();
+            
+            if (phoneName.includes(searchText)) {
+                article.setAttribute('search', 'hit');
+            } else {
+                article.setAttribute('search', 'miss');
+            }
+        });
+        
+        setEmptyState();
+    });
+}
+searchInit();
+
+function setEmptyState() {
+    let body = document.querySelector('body'),
+        sections = document.querySelectorAll('section.price-zone, section.favorites'),
+        articles = document.querySelectorAll('article.product-model');
+    
+    sections.forEach(function(section) {
+        let sectionZone = section.getAttribute('zone'),
+            visibleArticles = section.querySelectorAll('article.product-model[state="visible"]:not([search="miss"])').length;
+        
+        if (visibleArticles) {
+            section.removeAttribute('empty');
+        } else {
+            section.setAttribute('empty', 'true');
+        }
+        
+        //console.log('('+ sectionZone +') - Visible articles: ' + visibleArticles);
+    });
+    
+    let contentfulSections = document.querySelectorAll('section.price-zone:not([empty="true"])').length;
+    
+    if (contentfulSections) {
+        body.removeAttribute('empty');
+    } else {
+        body.setAttribute('empty', 'true');
+    }
+}
