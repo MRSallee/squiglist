@@ -249,7 +249,7 @@ section.top {
     
     box-sizing: border-box;
     margin: 16px;
-    padding: 16px 32px;
+    padding: 32px;
 
     border: 1px solid lightgray;
     border-radius: 9px;
@@ -308,7 +308,7 @@ section.top h1 {
     
     box-sizing: border-box;
     max-width: 800px;
-    padding: 16px 0 24px 0;
+    padding: 0 0 24px 0;
     margin: auto;
     
     border-bottom: 1px solid rgba(20,25,31, 0.05);
@@ -318,7 +318,7 @@ section.top h1 {
     font-weight: 700;
     font-size: 24px;
     line-height: 24px;
-    text-align: center;
+    text-align: left;
 }
 
 xsection.top h1:before {
@@ -345,10 +345,9 @@ xsection.top h1:before {
 }
 
 section.top h1:after {
-    position: absolute;
-    top: 57px;
-    left: 0;
-    right: 0;
+    position: relative;
+    top: -3px;
+    right: -4px;
     
     content: 'Beta';
     display: inline-block;
@@ -377,7 +376,7 @@ section.top p {
     font-family: var(--font-primary);
     font-size: 16px;
     line-height: 24px;
-    text-align: center;
+    text-align: left;
 }
 
 section.top p.disclosure {
