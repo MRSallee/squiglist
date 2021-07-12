@@ -214,7 +214,7 @@ function loadJson(sortMethod, sortChange) {
                 htmlLink.setAttribute('href', link);
                 htmlLinkStore.textContent = store;
                 
-                htmlLinkStore.addEventListener('click', function() {
+                htmlLink.addEventListener('click', function() {
                     // Analytics event
                     pushEventTag("clicked_store", phoneName, store, "user");
                 });
@@ -253,6 +253,8 @@ function loadJson(sortMethod, sortChange) {
                 clickedHeart(htmlModel, phoneName);
             });
             
+            observeModel(item, htmlModel);
+            
             //console.log('***** \n' + phoneName + '\n' + priceZone + '\n' + price + '\n' + signature + '\n' + score + '\n' + linkSquiglink + '\n' + linkAmazon + '\n' + linkAli + '\n' + linkDrop + '\n' + linkHeadphonesdotcom + '\n' + linkHifigo + '\n' + linkSza + '\n*****');
         });
         
@@ -279,6 +281,107 @@ loadJson('price-zones', false);
 
 
 
+// Observe model articles
+function observeModel(phone, article) {
+    let options = {
+          root: null,
+          rootMargin: '0px',
+          threshold: 1.0
+        },
+        observer = new IntersectionObserver(callback, options);    
+    
+    observer.observe(article);
+    article.setAttribute('observed', 'false');
+    
+    function callback(e) {
+        let inView = e[0].intersectionRatio === 1 ? true : false,
+            previouslyObserved = article.getAttribute('observed') === 'true' ? true : false,
+            phoneName = phone[1].phonename,
+            linkAmazon = phone[1].amazon,
+            linkAli = phone[1].aliexpress,
+            linkDrop = phone[1].drop,
+            linkHeadphonesdotcom = phone[1].headphonesdotcom,
+            linkHifigo = phone[1].hifigo,
+            linkLinsoul = phone[1].linsoul,
+            linkSza = phone[1].shenzhenaudio,
+            msrp = parseInt(phone[1].price.replace('$', '').replace(',',''));
+        
+        if (inView && !previouslyObserved) {
+            //console.log(phoneName);
+            article.setAttribute('observed', 'true');
+            
+            if (linkHeadphonesdotcom) {
+                let priceContainer = article.querySelector('a[href*="headphones.com"] > span.store-price');
+                
+                priceContainer.setAttribute('price', 'fetching');
+                getPrice(phoneName, msrp, linkHeadphonesdotcom, priceContainer);
+            }
+            
+            if (linkHifigo) {
+                let priceContainer = article.querySelector('a[href*="hifigo.com"] > span.store-price');
+                
+                priceContainer.setAttribute('price', 'fetching');
+                getPrice(phoneName, msrp, linkHifigo, priceContainer);
+            }
+            
+            if (linkLinsoul) {
+                let priceContainer = article.querySelector('a[href*="linsoul.com"] > span.store-price');
+                
+                priceContainer.setAttribute('price', 'fetching');
+                getPrice(phoneName, msrp, linkLinsoul, priceContainer);
+            }
+            
+            if (linkSza) {
+                let priceContainer = article.querySelector('a[href*="shenzhenaudio.com"] > span.store-price');
+                
+                priceContainer.setAttribute('price', 'fetching');
+                getPrice(phoneName, msrp, linkSza, priceContainer);
+            }
+            
+        }
+    }
+}
+
+
+
+// Close welcome
+function closeWelcomeInit() {
+    let welcomeContainer = document.querySelector('section.top'),
+        buttonCloseWelcome = document.querySelector('button.close-welcome'),
+        storageWelcomeClosed = localStorage.getItem('welcomeClosed');
+    
+    if (storageWelcomeClosed) {
+        welcomeContainer.setAttribute('closed', 'true');
+    } else {
+        buttonCloseWelcome.addEventListener('click', function() {
+            welcomeContainer.setAttribute('closed', 'true');
+
+            localStorage.setItem('welcomeClosed', 1);
+        });
+    }
+}
+closeWelcomeInit();
+
+
+
+// Header action
+let altHeaderElem = document.querySelector('header.header')
+
+altHeaderElem.addEventListener("click", function() {
+    let headerLinksState = altHeaderElem.getAttribute("data-links");
+
+    if (headerLinksState === "expanded") {
+        altHeaderElem.setAttribute("data-links", "collapsed");
+    } else {
+        altHeaderElem.setAttribute("data-links", "expanded");
+    }
+});
+
+
+
+
+
+
 // Sorting disabled for now
 // Sort controls
 function sortControls() {
@@ -296,8 +399,6 @@ function sortControls() {
     });
 }
 //sortControls();
-
-
 
 // Filter controls
 function filterControlsInit() {
@@ -425,46 +526,7 @@ function applyFiltersToDom(objFilter, filterType, filterValue, oldState) {
 }
 
 
-
-// Close welcome
-function closeWelcomeInit() {
-    let welcomeContainer = document.querySelector('section.top'),
-        buttonCloseWelcome = document.querySelector('button.close-welcome'),
-        storageWelcomeClosed = localStorage.getItem('welcomeClosed');
-    
-    if (storageWelcomeClosed) {
-        welcomeContainer.setAttribute('closed', 'true');
-    } else {
-        buttonCloseWelcome.addEventListener('click', function() {
-            welcomeContainer.setAttribute('closed', 'true');
-
-            localStorage.setItem('welcomeClosed', 1);
-        });
-    }
-}
-closeWelcomeInit();
-
-
-
-// Header action
-let altHeaderElem = document.querySelector('header.header')
-
-altHeaderElem.addEventListener("click", function() {
-    let headerLinksState = altHeaderElem.getAttribute("data-links");
-
-    if (headerLinksState === "expanded") {
-        altHeaderElem.setAttribute("data-links", "collapsed");
-    } else {
-        altHeaderElem.setAttribute("data-links", "expanded");
-    }
-});
-
-
-
-// Share URL function
-
 // Search function
-
 function searchInit() {
     let body = document.querySelector('body'),
         searchInput = document.querySelector('input.search'),
@@ -555,3 +617,4 @@ function setEmptyState() {
         body.setAttribute('empty', 'true');
     }
 }
+

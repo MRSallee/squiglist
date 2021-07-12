@@ -934,6 +934,108 @@ div.product-bottom div.row + div.row a.link-store {
     border-top: 1px solid currentColor;
 }
 
+span.store-price {
+    margin-left: auto;
+}
+
+span.store-price[price="fetching"]:before {
+    position: absolute;
+    top: 0;
+    left: -24px;
+    
+    content: '';
+    
+    display: block;
+    width: 6px;
+    height: 6px;
+    
+    background-color: var(--font-color-primary);
+    border-radius: 6px;
+    
+    animation: loading ease-in-out 1.0s 0.0s infinite forwards;
+}
+
+span.store-price[price="fetching"]:after {
+    position: absolute;
+    top: 0;
+    left: -12px;
+    
+    content: '';
+    
+    display: block;
+    width: 6px;
+    height: 6px;
+    
+    background-color: var(--font-color-primary);
+    border-radius: 6px;
+    
+    animation: loading ease-in-out 1.0s 0.2s infinite forwards;
+}
+
+span.store-price[price="fetching"] {
+    position: relative;
+    
+    flex: 6px 0 0;
+    height: 6px;
+    
+    background-color: var(--font-color-primary);
+    border-radius: 6px;
+    
+    animation: loading ease-in-out 1.0s 0.4s infinite forwards;
+}
+
+@keyframes loading {
+    0% {
+        background-color: var(--font-color-primary);
+    }
+    50% {
+        background-color: transparent;
+    }
+    100% {
+        background-color: var(--font-color-primary);
+    }
+}
+
+span.store-price[price="deal"]:before {
+    content: '!';
+    
+    display: inline-block;
+    padding: 0 10px;
+    margin: 0 8px 0 0;
+    
+    background-color: var(--font-color-primary);
+    border-radius: 6px;
+    
+    color: #fff;
+    font-weight: 700;
+    
+    opacity: 0.0;
+    animation: deal ease-in-out 0.2s 0.2s 1 forwards;
+}
+
+xspan.store-price[price="deal"]:before {
+    background-color: transparent;
+    border: 1px solid var(--font-color-primary);
+    
+    color: var(--font-color-primary);
+    line-height: 22px;
+}
+
+@keyframes deal {
+    0% {
+        opacity: 0.0;
+        transform: translateY(12px);
+    }
+    95% {
+        opacity: 1.0;
+        transform: translateY(-4px);
+    }
+    100% {
+        opacity: 1.0;
+        transform: translateY(0px);
+    }
+}
+
 
 
 /*****
