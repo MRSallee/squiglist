@@ -228,6 +228,8 @@ function loadJson(sortMethod, sortChange) {
             if ( linkLinsoul ) { addStoreLink('Linsoul', linkLinsoul); }
             if ( linkSza ) { addStoreLink('Shenzhen Audio', linkSza); }
             
+            addPromo(phoneName, htmlProductBottom);
+            
             htmlModel.setAttribute('data-score', score);
             htmlModel.setAttribute('data-signature', signature);
             htmlModel.setAttribute('data-price-zone', priceZone);
@@ -618,3 +620,36 @@ function setEmptyState() {
     }
 }
 
+// Promo
+function addPromo(phoneName, htmlProductBottom) {
+    let targetPhone = 'ThieAudio Legacy 2';
+    
+    if (phoneName === targetPhone) {
+        console.log(phoneName);
+        
+        let promoLink = 'https://forms.gle/Yg1xZonFCqetsKAm8',
+            promoCopy = 'Enter to win',
+            promoPrice = 'FREE',
+            htmlPromo = document.createElement('div'),
+            htmlPromoLink = document.createElement('a'),
+            htmlPromoLabel = document.createElement('span'),
+            htmlPromoPrice = document.createElement('span');
+        
+        htmlPromo.className = 'row';
+        htmlPromo.classList.add('promo');
+        htmlPromoLink.className = 'link-store';
+        htmlPromoLabel.className = 'store-name';
+        htmlPromoPrice.className = 'store-price';
+        
+        htmlPromoLink.setAttribute('href', promoLink);
+        htmlPromoLink.setAttribute('target', '_blank');
+        htmlPromoLabel.textContent = promoCopy;
+        htmlPromoPrice.textContent = promoPrice;
+        
+        htmlPromo.append(htmlPromoLink);
+        htmlPromoLink.append(htmlPromoLabel);
+        htmlPromoLink.append(htmlPromoPrice);
+        
+        htmlProductBottom.append(htmlPromo);
+    }
+}

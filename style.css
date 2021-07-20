@@ -1036,6 +1036,17 @@ xspan.store-price[price="deal"]:before {
     }
 }
 
+div.product-bottom div.row.promo {
+    max-height: 0;
+    overflow: hidden;
+    
+    transition: all 0.1s ease-out;
+}
+
+article.product-model[data-favorite="true"] div.product-bottom div.row.promo {
+    max-height: 41px;
+}
+
 
 
 /*****
