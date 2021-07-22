@@ -15,8 +15,6 @@ function loadJquery() {
 loadJquery();
 
 function foo() {
-    console.log('jquery loaded');
-    
     let urlAli = 'https://www.aliexpress.com/item/4001248898347.html', // Blocked
         urlAmazon = 'https://amzn.to/3gRrOnM', // Blocked
         urlDrop = 'https://drop.com/buy/akoustyx-r-220-iem?utm_source=linkshare&referer=95465S', // Blocked

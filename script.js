@@ -362,7 +362,8 @@ function closeWelcomeInit() {
         });
     }
 }
-closeWelcomeInit();
+// Welcome mat removed
+//closeWelcomeInit();
 
 
 
@@ -625,8 +626,6 @@ function addPromo(phoneName, htmlProductBottom) {
     let targetPhone = 'ThieAudio Legacy 2';
     
     if (phoneName === targetPhone) {
-        console.log(phoneName);
-        
         let promoLink = 'https://forms.gle/Yg1xZonFCqetsKAm8',
             promoCopy = 'Enter to win',
             promoPrice = 'FREE',
@@ -653,3 +652,23 @@ function addPromo(phoneName, htmlProductBottom) {
         htmlProductBottom.append(htmlPromo);
     }
 }
+
+// Super logo spin
+function superSpin() {
+    let splashContainer = document.querySelector('section.splash'),
+        superLogo = document.querySelector('div.super-logo');
+    
+    superLogo.addEventListener('mousedown', function() {
+        let spinStatus = superLogo.getAttribute('data-spinning');
+        
+        if ( spinStatus === 'true' ) {
+            
+        } else {
+            superLogo.setAttribute('data-spinning', 'true');
+            setTimeout(function() {
+                superLogo.setAttribute('data-spinning', 'false');
+            }, 3000);
+        }
+    })
+}
+superSpin();
