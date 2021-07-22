@@ -29,52 +29,63 @@ function foo() {
 }
 
 function getPrice(phoneName, msrp, url, priceContainer) {
-    //console.log(url);
-    
-    $.get(url, function(response) {
-        let parsedHtml = jQuery.parseHTML(response),
-            price = priceSet(parsedHtml);
+    if ( url.indexOf('headphones.com') > -1 || url.indexOf('hifigo.com') > -1 || url.indexOf('linsoul.com') > -1 || url.indexOf('shenzhenaudio.com') > -1 ) {
+        let urlJson = url + '.json';
         
-        //console.log(parsedHtml);
-        
-        function priceSet(parsedHtml) {
-            if (url.indexOf('hifigo.com') > -1) {
-                let priceContainer = $(parsedHtml).find('span.money:contains("$")')[0],
-                    priceText = priceContainer.innerText;
+        $.getJSON(urlJson, function(response) {
+            let price = response.product.variants[0].price,
+                priceText = '$' + price;
+            
+            priceToPage(priceText);
+            return priceText;
+        });
+    } else if ( url.indexOf('penonaudio.com') > -1 ) {
+        console.log('Penon price');
+        $.get(url, function(response) {
+            let parsedHtml = jQuery.parseHTML(response),
+                price = priceSet(parsedHtml);
 
-                return priceText;
-            } else if (url.indexOf('linsoul.com') > -1) {
-                let priceContainer = $(parsedHtml).filter('meta[property*="price"]')[0],
-                    priceText = '$' + priceContainer.getAttribute('content');
+            //console.log(parsedHtml);
 
-                return priceText;
-            } else if (url.indexOf('shenzhenaudio.com') > -1) {
-                let priceContainer = $(parsedHtml).filter('meta[property*="price"]')[0],
-                    priceText = '$' + priceContainer.getAttribute('content');
+            function priceSet(parsedHtml) {
+                if (url.indexOf('hifigo.com') > -1) {
+                    let priceContainer = $(parsedHtml).find('span.money:contains("$")')[0],
+                        priceText = priceContainer.innerText;
 
-                return priceText;
-            } else if (url.indexOf('headphones.com') > -1) {
-                let priceContainer = $(parsedHtml).filter('meta[property*="price"]')[0],
-                    priceText = '$' + priceContainer.getAttribute('content');
+                    return priceText;
+                } else if (url.indexOf('linsoul.com') > -1) {
+                    let priceContainer = $(parsedHtml).filter('meta[property*="price"]')[0],
+                        priceText = '$' + priceContainer.getAttribute('content');
 
-                return priceText;
+                    return priceText;
+                } else if (url.indexOf('shenzhenaudio.com') > -1) {
+                    let priceContainer = $(parsedHtml).filter('meta[property*="price"]')[0],
+                        priceText = '$' + priceContainer.getAttribute('content');
+
+                    return priceText;
+                } else if (url.indexOf('headphones.com') > -1) {
+                    let priceContainer = $(parsedHtml).filter('meta[property*="price"]')[0],
+                        priceText = '$' + priceContainer.getAttribute('content');
+
+                    return priceText;
+                }
             }
-        }
-        
+        });
+    }
+    
+    function priceToPage(priceText) {
         //console.log(phoneName + ': ' + priceText);
-        let priceNum = parseInt(price.replace('$', '').replace(',','')),
+        let priceNum = parseInt(priceText.replace('$', '').replace(',','')),
             priceDetermination = (priceNum / msrp) < 0.81 ? 'deal' : 'standard';
-        
+
         //console.log(phoneName + '\n' + 'MSRP: ' + msrp + '\n' + 'Price: ' + priceNum + '\n' + 'Ratio: ' + priceNum / msrp)
-        
+
         if (priceContainer) {
-            priceContainer.textContent = price;
+            priceContainer.textContent = priceText;
             priceContainer.setAttribute('price', priceDetermination);
         } else {
             console.log('Test complete');
-            console.log(price);
+            console.log(priceText);
         }
-        
-    });
-    
+    }
 }

@@ -103,6 +103,7 @@ function loadJson(sortMethod, sortChange) {
                 linkHeadphonesdotcom = item[1].headphonesdotcom,
                 linkHifigo = item[1].hifigo,
                 linkLinsoul = item[1].linsoul,
+                linkPenon = item[1].penonaudio,
                 linkSza = item[1].shenzhenaudio,
                 htmlTargetZone = document.querySelector('section.price-zone[zone="'+ priceZone +'"]'),
                 htmlTargetStarsGroup = htmlTargetZone.querySelector('div.stars-grouping[group="'+ score +'"]'),
@@ -226,6 +227,7 @@ function loadJson(sortMethod, sortChange) {
             if ( linkHeadphonesdotcom ) { addStoreLink('Headphones.com', linkHeadphonesdotcom); }
             if ( linkHifigo ) { addStoreLink('HiFiGo', linkHifigo); }
             if ( linkLinsoul ) { addStoreLink('Linsoul', linkLinsoul); }
+            if ( linkPenon ) { addStoreLink('Penon Audio', linkPenon); }
             if ( linkSza ) { addStoreLink('Shenzhen Audio', linkSza); }
             
             addPromo(phoneName, htmlProductBottom);
@@ -305,6 +307,7 @@ function observeModel(phone, article) {
             linkHeadphonesdotcom = phone[1].headphonesdotcom,
             linkHifigo = phone[1].hifigo,
             linkLinsoul = phone[1].linsoul,
+            linkPenon = phone[1].penonaudio,
             linkSza = phone[1].shenzhenaudio,
             msrp = parseInt(phone[1].price.replace('$', '').replace(',',''));
         
@@ -339,7 +342,6 @@ function observeModel(phone, article) {
                 priceContainer.setAttribute('price', 'fetching');
                 getPrice(phoneName, msrp, linkSza, priceContainer);
             }
-            
         }
     }
 }
