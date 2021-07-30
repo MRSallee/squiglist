@@ -385,9 +385,6 @@ altHeaderElem.addEventListener("click", function() {
 
 
 
-
-
-
 // Sorting disabled for now
 // Sort controls
 function sortControls() {
