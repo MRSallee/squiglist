@@ -13,14 +13,14 @@ function populateOverlay(type, url, phoneName) {
         embedLink = link;
         
         // Analytics event
-        pushEventTag("clicked_review", phoneName, "", "user");
+        pushEventTag('clicked_review', phoneName, '', 'user');
         
     } else if (type === 'frequency-response') {
         embedLink = url.replace('?share=', '?embed&share=')
         link = url;
         
         // Analytics event
-        pushEventTag("clicked_fr", phoneName, "", "user");
+        pushEventTag('clicked_fr', phoneName, '', 'user');
     } else {
         link = url;
         embedLink = link;
@@ -69,7 +69,7 @@ function clickedHeart(htmlModel, phoneName) {
         if (!hasFaves) { body.setAttribute('first-fave', 'true'); }
         
         // Analytics event
-        pushEventTag("clicked_favorite", phoneName, "", "user");
+        pushEventTag('clicked_favorite', phoneName, '', 'user');
     }
 }
 
@@ -77,7 +77,7 @@ function clickedHeart(htmlModel, phoneName) {
 // Event for shop links
 function clickedStore(store) {
     // Analytics event
-    pushEventTag("clicked_store", phoneName, store, "user");
+    pushEventTag('clicked_store', phoneName, store, 'user');
 }
 
 
@@ -217,7 +217,7 @@ function loadJson(sortMethod, sortChange) {
                 
                 htmlLink.addEventListener('click', function() {
                     // Analytics event
-                    pushEventTag("clicked_store", phoneName, store, "user");
+                    pushEventTag('clicked_store', phoneName, store, 'user');
                 });
             }
             
@@ -273,6 +273,7 @@ function loadJson(sortMethod, sortChange) {
                 behavior: 'smooth'
             });
         }
+        filterByUrl();
     }
     
     fetch(jsonFilename)
@@ -426,7 +427,7 @@ function filterControlsInit() {
             objFilterSet = { 'filterType': filterType },
             arrSubFilters = [];
         
-       objFilterSet.filters = arrSubFilters;
+        objFilterSet.filters = arrSubFilters;
         arrAllFilters.push(objFilterSet);
         
         elemsFilters.forEach(function(filter) {
@@ -483,7 +484,8 @@ function updateFiltersData(objFilterSet, objFilter, filterType, filterValue, old
     
     applyFiltersToDom(objFilter, filterType, filterValue, oldState);
 }
-//const result = words.filter(word => word.length > 6);
+
+
 
 // Update DOM state for filters
 function applyFiltersToDom(objFilter, filterType, filterValue, oldState) {
@@ -527,8 +529,10 @@ function applyFiltersToDom(objFilter, filterType, filterValue, oldState) {
         body.removeAttribute('filters-active');
     }
     
+    updateUrl(objFilter);
     setEmptyState();
 }
+
 
 
 // Search function
@@ -592,9 +596,118 @@ function searchInit() {
         });
         
         setEmptyState();
+        
+        updateUrl();
     });
 }
 searchInit();
+
+
+
+// Update URL to reflect filters
+function updateUrl() {
+    let baseUrl = window.location.href.split('?').shift(),
+        title = document.querySelector('title').textContent,
+        filterStrings = [];
+    
+    let searchActive = document.querySelector('body').getAttribute('search-active') === 'true' ? true : false;
+    
+    arrAllFilters.forEach(function(filterSet) {
+        let filterType = filterSet.filterType,
+            setFilters = filterSet.filters,
+            noneHidden = setFilters.find(obj => obj.filterState === 'hidden') ? 'false' : 'true';
+        
+        if (noneHidden === 'true') {
+            //console.log('None hidden');
+        } else {
+            let activeFilters = [];
+            
+            setFilters.forEach(function(filter) {
+                let filterValue = filter.filterValue,
+                    filterState = filter.filterState;
+                
+                if (filterState === 'visible') {
+                    activeFilters.push(filterValue);
+                }
+            });
+            
+            let filterString = filterType + '=' + activeFilters.join(),
+                filterStringSafe = filterString.replaceAll(' ', '_');
+            
+            filterStrings.push(filterStringSafe);
+        }
+    });
+    
+    let searchText = searchActive ? document.querySelector('input.search').value.replaceAll(' ', '_') : false,
+        searchAppendage = searchText ? 'search=' + searchText : false,
+        filtersAppendage = filterStrings.length ? filterStrings.join('&') : null,
+        urlAppendage = filtersAppendage,
+        newUrl = filterStrings.length ? baseUrl + '?' + urlAppendage : baseUrl;
+    
+    if (searchAppendage && filtersAppendage) {
+        let urlAppendage = filtersAppendage + '&' + searchAppendage,
+            newUrl = baseUrl + '?' + urlAppendage;
+        
+        window.history.replaceState(null, title, newUrl);
+    } else if (searchAppendage) {
+        let urlAppendage = searchAppendage,
+            newUrl = baseUrl + '?' + urlAppendage;
+        
+        window.history.replaceState(null, title, newUrl);
+    } else if (filtersAppendage) {
+        let urlAppendage = filtersAppendage,
+            newUrl = baseUrl + '?' + urlAppendage;
+        
+        window.history.replaceState(null, title, newUrl);
+    } else {
+        let newUrl = baseUrl;
+        
+        window.history.replaceState(null, title, newUrl);
+    }
+}
+
+// Read filters from URL
+function filterByUrl() {
+    let openedUrl = window.location.href,
+        urlContainsParams = openedUrl.indexOf('?') > -1 ? true : false;
+    
+    if (urlContainsParams) {
+        let params = openedUrl.split('?').pop().split('&');
+        
+        // Analytics event
+        pushEventTag('load_url_params', '', params, 'user');
+        
+        params.forEach(function(param) {
+            let paramType = param.split('=').shift(),
+                paramVals = param.split('=').pop().split(',');
+            
+            if (paramType != 'search') {
+                let filtersContainer = document.querySelector('div.filters[filter-type="'+ paramType +'"]'),
+                    filterButtons = filtersContainer.querySelectorAll('button.filter-button');
+                
+                paramVals.forEach(function(val) {
+                    let filterVal = val.replace('_', ' '),
+                        filterButton = filtersContainer.querySelector('button.filter-button[filter="'+ filterVal +'"]');
+                    filterButton.click();
+                });
+            } else {
+                let searchInput = document.querySelector('input.search'),
+                    inputEvent = new Event('input', {
+                            bubbles: true,
+                            cancelable: true,
+                        }),
+                    blurEvent = new Event('blur', {
+                            bubbles: true,
+                            cancelable: true
+                        });
+                
+                searchInput.value = paramVals;
+                searchInput.dispatchEvent(inputEvent);
+                searchInput.dispatchEvent(blurEvent);
+            }
+        });
+    }
+}
 
 function setEmptyState() {
     let body = document.querySelector('body'),
