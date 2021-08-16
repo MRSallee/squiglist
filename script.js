@@ -770,7 +770,7 @@ function superSpin() {
     let splashContainer = document.querySelector('section.splash'),
         superLogo = document.querySelector('div.super-logo');
     
-    superLogo.addEventListener('mousedown', function() {
+    superLogo.addEventListener('click', function() {
         let spinStatus = superLogo.getAttribute('data-spinning');
         
         if ( spinStatus === 'true' ) {
@@ -779,7 +779,7 @@ function superSpin() {
             superLogo.setAttribute('data-spinning', 'true');
             setTimeout(function() {
                 superLogo.setAttribute('data-spinning', 'false');
-            }, 3000);
+            }, 1500);
         }
     })
 }

@@ -1060,7 +1060,35 @@ section.favorites {
 }
 
 section.favorites:empty {
-    display: none;
+/*    display: none;*/
+}
+
+section.favorites:empty:after {
+    content: 'Use the \2661  button to add favorites that pin to the top of the list';
+    
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    
+    margin: 16px;
+    padding: 32px;
+    
+    background-color: var(--font-color-primary);
+    border-radius: 6px;
+    
+    color: var(--font-color-secondary);
+    font-family: var(--font-primary);
+    font-size: 16px;
+    line-height: 1em;
+
+
+    background-color: #fff;
+    border: 2px solid var(--font-color-primary);
+    color: var(--font-color-primary);
+}
+
+section.favorites:empty:after {
+    content: 'Your \2661  favorites list is empty. Fill it up!';
 }
 
 section.favorites[empty="true"] {
