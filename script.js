@@ -230,7 +230,7 @@ function loadJson(sortMethod, sortChange) {
             if ( linkPenon ) { addStoreLink('Penon Audio', linkPenon); }
             if ( linkSza ) { addStoreLink('Shenzhen Audio', linkSza); }
             
-            addPromo(phoneName, htmlProductBottom);
+            //addPromo(phoneName, htmlProductBottom);
             
             htmlModel.setAttribute('data-score', score);
             htmlModel.setAttribute('data-signature', signature);

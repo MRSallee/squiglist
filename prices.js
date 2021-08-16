@@ -34,11 +34,12 @@ function getPrice(phoneName, msrp, url, priceContainer) {
         
         $.getJSON(urlJson, function(response) {
             let price = response.product.variants[0].price,
-                priceText = '$' + price;
+                priceText = '$' + Math.round(price).toLocaleString();
             
             priceToPage(priceText);
             return priceText;
         });
+        
     } else if ( url.indexOf('penonaudio.com') > -1 ) {
         console.log('Penon price');
         $.get(url, function(response) {
@@ -77,6 +78,8 @@ function getPrice(phoneName, msrp, url, priceContainer) {
         //console.log(phoneName + ': ' + priceText);
         let priceNum = parseInt(priceText.replace('$', '').replace(',','')),
             priceDetermination = (priceNum / msrp) < 0.81 ? 'deal' : 'standard';
+        
+//        console.log(priceText);
 
         //console.log(phoneName + '\n' + 'MSRP: ' + msrp + '\n' + 'Price: ' + priceNum + '\n' + 'Ratio: ' + priceNum / msrp)
 
