@@ -1083,7 +1083,7 @@ section.favorites:empty:after {
 
 
     background-color: #fff;
-    border: 2px solid var(--font-color-primary);
+    border: 1px solid lightgray;
     color: var(--font-color-primary);
 }
 

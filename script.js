@@ -86,7 +86,7 @@ function clickedStore(store) {
 function loadJson(sortMethod, sortChange) {
     // https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API/Using_Fetch
     let jsonFilename = 'data.json?' + new Date().getTime(),
-        jsonUrl = 'https://gsx2json.com/api?id=19ZKaK62HjH_gm7oMahN74hiR5nMqS1ifSrHloRIKfcg&sheet=2&columns=false';
+        jsonUrl = 'https://gsx2json.com/api?id=19ZKaK62HjH_gm7oMahN74hiR5nMqS1ifSrHloRIKfcg&sheet=JSON&columns=false';
     
     function handleData(data) {
         Object.entries(data.rows).forEach(function(item) {
@@ -290,7 +290,7 @@ loadJson('price-zones', false);
 function observeModel(phone, article) {
     let options = {
           root: null,
-          rootMargin: '0px',
+          rootMargin: '5px',
           threshold: 1.0
         },
         observer = new IntersectionObserver(callback, options);    
@@ -311,6 +311,11 @@ function observeModel(phone, article) {
             linkPenon = phone[1].penonaudio,
             linkSza = phone[1].shenzhenaudio,
             msrp = parseInt(phone[1].price.replace('$', '').replace(',',''));
+        
+        
+        if (phoneName === 'BGVP DM8') {
+            console.log(phoneName + '\n' + e[0].intersectionRatio)
+        }
         
         if (inView && !previouslyObserved) {
             //console.log(phoneName);
