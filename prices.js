@@ -77,7 +77,7 @@ function getPrice(phoneName, msrp, url, priceContainer) {
     function priceToPage(priceText) {
         //console.log(phoneName + ': ' + priceText);
         let priceNum = parseInt(priceText.replace('$', '').replace(',','')),
-            priceDetermination = (priceNum / msrp) < 0.81 ? 'deal' : 'standard';
+            priceDetermination = (priceNum / msrp) < 0.81 || ((priceNum - msrp < -19) && ((priceNum / msrp) < 0.91)) ? 'deal' : 'standard';
         
 //        console.log(priceText);
 

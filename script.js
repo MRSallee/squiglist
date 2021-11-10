@@ -90,6 +90,7 @@ function loadJson(sortMethod, sortChange) {
     
     function handleData(data) {
         Object.entries(data.rows).forEach(function(item) {
+            //console.log(item[1].phonename);
             let phoneName = item[1].phonename,
                 priceZone = item[1].pricezone,
                 price = item[1].price,
@@ -312,10 +313,6 @@ function observeModel(phone, article) {
             linkSza = phone[1].shenzhenaudio,
             msrp = parseInt(phone[1].price.replace('$', '').replace(',',''));
         
-        
-        if (phoneName === 'BGVP DM8') {
-            console.log(phoneName + '\n' + e[0].intersectionRatio)
-        }
         
         if (inView && !previouslyObserved) {
             //console.log(phoneName);
@@ -590,7 +587,7 @@ function searchInit() {
         allArticles.forEach(function(article) {
             let phoneName = article.querySelector('h2.model-name').textContent.toLowerCase();
             
-            if (phoneName.includes(searchText)) {
+            if (phoneName.match(searchText)) {
                 article.setAttribute('search', 'hit');
             } else {
                 article.setAttribute('search', 'miss');
@@ -674,14 +671,14 @@ function filterByUrl() {
         urlContainsParams = openedUrl.indexOf('?') > -1 ? true : false;
     
     if (urlContainsParams) {
-        let params = openedUrl.split('?').pop().split('&');
+        let params = decodeURIComponent(openedUrl.split('?').pop()).split('&');
         
         // Analytics event
         pushEventTag('load_url_params', '', params, 'user');
         
         params.forEach(function(param) {
             let paramType = param.split('=').shift(),
-                paramVals = param.split('=').pop().split(',');
+                paramVals = param.split('=').pop().replace('_',' ').split(',');
             
             if (paramType != 'search') {
                 let filtersContainer = document.querySelector('div.filters[filter-type="'+ paramType +'"]'),
