@@ -735,6 +735,50 @@ function setEmptyState() {
     }
 }
 
+// Reset filters
+function resetFilters() {
+    let searchInput = document.querySelector('input.search'),
+        keyup = new Event('keyup'),
+        input = new Event('input'),
+        disabledFilters = document.querySelectorAll('button.filter-button[state="hidden"]');
+    
+    searchInput.value = '';
+    searchInput.focus();
+    searchInput.dispatchEvent(input);
+    searchInput.blur();
+    disabledFilters.forEach(function(button) {
+        button.click();
+    });
+    
+    updateUrl();
+    //console.log('Reset filters');
+}
+document.querySelector('button.reset-filters').addEventListener('click', function() {
+    resetFilters();
+});
+
+// Show / hide more
+function showHideToggle() {
+    let showHideButtons = document.querySelectorAll('div.show-all button.toggle');
+    
+    showHideButtons.forEach(function(button) {
+        let thisSection = button.closest('section.price-zone');
+        
+        function toggle() {
+            let showAllStatus = thisSection.getAttribute('top-only');
+            
+            if (showAllStatus === 'true') {
+                thisSection.setAttribute('top-only', 'false');
+            } else {
+                thisSection.setAttribute('top-only', 'true');
+            }
+        }
+        
+        button.addEventListener('click', toggle);
+    });
+}
+showHideToggle();
+
 // Promo
 function addPromo(phoneName, htmlProductBottom) {
     let targetPhone = 'ThieAudio Legacy 2';
