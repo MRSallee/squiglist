@@ -29,66 +29,73 @@ function foo() {
 }
 
 function getPrice(phoneName, msrp, url, priceContainer) {
-    if ( url.indexOf('headphones.com') > -1 || url.indexOf('hifigo.com') > -1 || url.indexOf('linsoul.com') > -1 || url.indexOf('shenzhenaudio.com') > -1 ) {
-        let urlJson = url + '.json';
-        
-        $.getJSON(urlJson, function(response) {
-            let price = response.product.variants[0].price,
-                priceText = '$' + Math.round(price).toLocaleString();
-            
-            priceToPage(priceText);
-            return priceText;
-        });
-        
-    } else if ( url.indexOf('penonaudio.com') > -1 ) {
-        console.log('Penon price');
-        $.get(url, function(response) {
-            let parsedHtml = jQuery.parseHTML(response),
-                price = priceSet(parsedHtml);
+    try {
+        if ( url.indexOf('headphones.com') > -1 || url.indexOf('hifigo.com') > -1 || url.indexOf('linsoul.com') > -1 || url.indexOf('shenzhenaudio.com') > -1 ) {
+            let urlJson = url + '.json';
 
-            //console.log(parsedHtml);
+            $.getJSON(urlJson, function(response) {
+                let price = response.product.variants[0].price,
+                    priceText = '$' + Math.round(price).toLocaleString();
 
-            function priceSet(parsedHtml) {
-                if (url.indexOf('hifigo.com') > -1) {
-                    let priceContainer = $(parsedHtml).find('span.money:contains("$")')[0],
-                        priceText = priceContainer.innerText;
+                priceToPage(priceText);
+                return priceText;
+            });
 
-                    return priceText;
-                } else if (url.indexOf('linsoul.com') > -1) {
-                    let priceContainer = $(parsedHtml).filter('meta[property*="price"]')[0],
-                        priceText = '$' + priceContainer.getAttribute('content');
+        } else if ( url.indexOf('penonaudio.com') > -1 ) {
+            console.log('Penon price');
+            $.get(url, function(response) {
+                let parsedHtml = jQuery.parseHTML(response),
+                    price = priceSet(parsedHtml);
 
-                    return priceText;
-                } else if (url.indexOf('shenzhenaudio.com') > -1) {
-                    let priceContainer = $(parsedHtml).filter('meta[property*="price"]')[0],
-                        priceText = '$' + priceContainer.getAttribute('content');
+                //console.log(parsedHtml);
 
-                    return priceText;
-                } else if (url.indexOf('headphones.com') > -1) {
-                    let priceContainer = $(parsedHtml).filter('meta[property*="price"]')[0],
-                        priceText = '$' + priceContainer.getAttribute('content');
+                function priceSet(parsedHtml) {
+                    if (url.indexOf('hifigo.com') > -1) {
+                        let priceContainer = $(parsedHtml).find('span.money:contains("$")')[0],
+                            priceText = priceContainer.innerText;
 
-                    return priceText;
+                        return priceText;
+                    } else if (url.indexOf('linsoul.com') > -1) {
+                        let priceContainer = $(parsedHtml).filter('meta[property*="price"]')[0],
+                            priceText = '$' + priceContainer.getAttribute('content');
+
+                        return priceText;
+                    } else if (url.indexOf('shenzhenaudio.com') > -1) {
+                        let priceContainer = $(parsedHtml).filter('meta[property*="price"]')[0],
+                            priceText = '$' + priceContainer.getAttribute('content');
+
+                        return priceText;
+                    } else if (url.indexOf('headphones.com') > -1) {
+                        let priceContainer = $(parsedHtml).filter('meta[property*="price"]')[0],
+                            priceText = '$' + priceContainer.getAttribute('content');
+
+                        return priceText;
+                    }
                 }
-            }
-        });
-    }
-    
-    function priceToPage(priceText) {
-        //console.log(phoneName + ': ' + priceText);
-        let priceNum = parseInt(priceText.replace('$', '').replace(',','')),
-            priceDetermination = (priceNum / msrp) < 0.81 || ((priceNum - msrp < -19) && ((priceNum / msrp) < 0.91)) ? 'deal' : 'standard';
-        
-//        console.log(priceText);
-
-        //console.log(phoneName + '\n' + 'MSRP: ' + msrp + '\n' + 'Price: ' + priceNum + '\n' + 'Ratio: ' + priceNum / msrp)
-
-        if (priceContainer) {
-            priceContainer.textContent = priceText;
-            priceContainer.setAttribute('price', priceDetermination);
-        } else {
-            console.log('Test complete');
-            console.log(priceText);
+            });
         }
+
+        function priceToPage(priceText) {
+            //console.log(phoneName + ': ' + priceText);
+            let priceNum = parseInt(priceText.replace('$', '').replace(',','')),
+                priceDetermination = (priceNum / msrp) < 0.81 || ((priceNum - msrp < -19) && ((priceNum / msrp) < 0.91)) ? 'deal' : 'standard';
+
+    //        console.log(priceText);
+
+            //console.log(phoneName + '\n' + 'MSRP: ' + msrp + '\n' + 'Price: ' + priceNum + '\n' + 'Ratio: ' + priceNum / msrp)
+
+            if (priceContainer) {
+                priceContainer.textContent = priceText;
+                priceContainer.setAttribute('price', priceDetermination);
+            } else {
+                console.log('Test complete');
+                console.log(priceText);
+            }
+        }
+    } catch {
+        setTimeout(function() {
+            getPrice(phoneName, msrp, url, priceContainer)
+        }, 1000);
+        //console.log('Price not fetched, trying again in 1 second.');
     }
 }

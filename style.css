@@ -400,7 +400,7 @@ aside.embed-overlay {
     position: fixed;
     bottom: 0;
     right: 0;
-    z-index: 3;
+    z-index: 4;
     
     display: flex;
     flex-direction: column;
@@ -1970,7 +1970,7 @@ body[empty="true"] div.board-filtered {
 div.board-filtered {
     position: sticky;
     bottom: 0px;
-    z-index: 1;
+    z-index: 4;
      
     display: none;
     align-items: center;
@@ -2243,24 +2243,30 @@ section.splash:after {
 @keyframes splash-scroll-top {
     0% {
         background-position: left 0% top 0%;
+        opacity: 0.2;
     }
     50% {
         background-position: left 50% top 50%;
+        opacity: 0.5;
     }
     100% {
         background-position: left 100% top 0%;
+        opacity: 0.2;
     }
 }
 
 @keyframes splash-scroll-bottom {
     0% {
         background-position: left 0% bottom 0%;
+        opacity: 0.2;
     }
     50% {
         background-position: left 50% bottom 50%;
+        opacity: 0.5;
     }
     100% {
         background-position: left 100% bottom 0%;
+        opacity: 0.2;
     }
 }
 
