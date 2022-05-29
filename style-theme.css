@@ -53,3 +53,22 @@ body.dark-mode {
     --logo-filter: none;
     --svg-filter: grayscale(1.0) opacity(0.5);
 }
+
+header.header ul.header-links li:nth-child(2) a:after {
+    position: relative;
+    top: 0px;
+    right: -4px;
+    
+    content: 'New';
+    display: block;
+    padding: 2px 3px;
+    
+    background-color: transparent;
+    border: 1px solid var(--font-color-secondary);
+    border-radius: 3px;
+    
+    color: var(--font-color-secondary);
+    font-size: 8px;
+    line-height: 1em;
+    text-transform: uppercase;
+}

@@ -200,7 +200,9 @@ function loadJson(sortMethod, sortChange) {
                 let htmlRowStore = document.createElement('div'),
                     htmlLink = document.createElement('a'),
                     htmlLinkStore = document.createElement('span'),
-                    htmlLinkPrice = document.createElement('span');
+                    htmlLinkPrice = document.createElement('span'),
+                    utm = 'utm_source=squiglink&utm_medium=rankingsList',
+                    linkUtm = link.indexOf('?') ? link + '&' + utm : link + '?' + utm;
                 
                 htmlRowStore.className = 'row';
                 htmlLink.className = 'link-store';
